@@ -39,13 +39,17 @@ def coletar_proximas_paginas(url_base):
 
         lista_produtos = coletar_produtos(soup)
         lista_total_produtos.extend(lista_produtos)
-        next_button = soup.find("span", class_="andes-pagination__arrow-title", text="Siguiente")
 
+        # Buscar link para próxima página
+        next_button = soup.find("li", class_="andes-pagination__button--next")
         if next_button:
-            url_next = next_button.parent["href"]
-            url_atual = url_next
+            next_link = next_button.find("a")
+            if next_link and "href" in next_link.attrs:
+                url_atual = next_link["href"]
+            else:
+                url_atual = None  # Finaliza o loop se não houver link
         else:
-            url_atual = None
+            url_atual = None  # Finaliza o loop se não houver próximo botão
 
     return lista_total_produtos
 
